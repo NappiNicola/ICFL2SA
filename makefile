@@ -1,0 +1,14 @@
+link: main.o factorizations.o trie_node_utils.o
+	g++ main.o factorizations.o trie_node_utils.o -o suffix_array.exe -pg
+
+main.o:
+	g++ -c main.cpp -pg
+
+factorizations.o:
+	g++ -c factorizations.cpp -pg
+
+trie_node_utils.o:
+	g++ -c trie_node_utils.cpp -pg
+
+clean:
+	rm -rf *.o *.exe *.out *.txt
