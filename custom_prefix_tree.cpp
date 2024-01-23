@@ -29,7 +29,7 @@ bool add_prefix_in_tree(prefix_tree_node* root,string* prefix,int indice){
     //Controlliamo se il prefisso che vogliamo inserire è contenuto nel nodo in cui ci troviamo
 
     if(strcmp(root->prefix->c_str(),prefix->c_str())==0){
-        root->array_of_indexes.insert(root->array_of_indexes.begin() + root->array_of_indexes.size(),indice);
+        root->array_of_indexes.push_back(indice);
         return true;
     }
 
@@ -39,8 +39,8 @@ bool add_prefix_in_tree(prefix_tree_node* root,string* prefix,int indice){
 
     if(index_of_child_with_the_same_prefix == -1){
         prefix_tree_node* x=build_prefix_tree_node(root,prefix);
-        x->array_of_indexes.insert(root->array_of_indexes.begin() + root->array_of_indexes.size(),indice);
-        root->sons.insert(root->sons.begin() + root->sons.size(),x);
+        x->array_of_indexes.push_back(indice);
+        root->sons.push_back(x);
 
         return true;
     }
