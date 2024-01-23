@@ -1,0 +1,31 @@
+/mnt/c
+
+gprof ./suffix_array.exe gmon.out -p > report.txt
+gprof ./suffix_array.exe gmon.out -q1 > report_graph.txt
+gprof -b -q1 ./suffix_array.exe > brief_report_with_call_graph.txt
+
+
+#Alfabeto di 4 lettere
+     2 - AC
+     4 - ACCA
+     6 - ACCAAC
+     8 - ACCAACCA
+    10 - ACCAACCAAC
+    12 - ACCAACCAACCA
+    14 - ACCAACCAACCAGA
+    16 - ACCAACCAACCAGATT
+    18 - ACCAACCAACCAGATTAT
+    20 - ACCAACCAACCAGATTATTA
+
+#Alfabeto di 6 lettere
+     2 - DB
+     4 - DBCA
+     6 - CEFBDB
+     8 - EAFBDCEF
+    10 - BDFCEDEBFA
+    12 - CADBEFBFCEDE
+    14 - DFBEDFCEAACBC
+    16 - CFDCEBAAFBDBECDF
+    18 - FBCBDEFBFDADACCEBF
+    20 - BEFCDFDCECABAFBFEDAD
+#
