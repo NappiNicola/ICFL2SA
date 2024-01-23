@@ -6,6 +6,7 @@
 #include <time.h>
 #include "factorizations.h"
 #include "trie_node_utils.h"
+#include"utils.h"
 
 using namespace std;
 
@@ -95,6 +96,23 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     //cout<<"###################### sorting_suffixes_via_icfl_trie"<<endl;
 
     vector<int> icfl_list = ICFL_recursive(word, (*word).length());
+
+    printVector(icfl_list, "Stampa ICFL");
+
+    for(int i=0;i<icfl_list.size()-1;i++){
+        for (int j=icfl_list[i];j<icfl_list[i+1];j++){
+            cout<<word->at(j);
+        }
+        cout<<", ";
+
+    }
+
+    for(int i=icfl_list[icfl_list.size()-1];i<word->length();i++){
+        cout<<word->at(i);
+    }
+
+
+    cout<<endl;
 
     // Creazione root del prefix tree
     trie_node* root = new trie_node((*word).length(), word);

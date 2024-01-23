@@ -184,6 +184,8 @@ vector<int> ICFL_recursive(string* word, int word_sx_bound) {
 
     cout << endl;
 
+    
+
     /*
     cout << "icfl index: " << endl;
     for(int i = 0; i < icfl_list_index.size(); i++) {
