@@ -11,4 +11,4 @@ trie_node_utils.o:
 	g++ -c trie_node_utils.cpp -pg
 
 clean:
-	rm -rf *.o *.exe *.out *.txt
+	rm -rf *.o *.exe *.out report.txt report_graph.txt brief_report_with_call_graph.txt
