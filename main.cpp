@@ -137,14 +137,31 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     }
     cout<<endl;
 
-    //La root è la stringa vuota
-    cout<<"\nCREAZIONE ALBERO\n";
-    suffix_tree_node* root = build_suffix_tree_node(NULL,"\0");
+    int max_size=0;
     for(int i=0;i<icfl_list.size();i++){
-        const char* lyndon_word=list_of_lyndon_words[i];
-        cout<<lyndon_word<<endl;
-        for(int j=strlen(lyndon_word)-1;j>=0;j--){
-            add_suffix_in_tree(root,lyndon_word+j,icfl_list[i]+j);
+        if (strlen(list_of_lyndon_words[i])>max_size){
+            max_size=strlen(list_of_lyndon_words[i]);
+        } 
+    }
+
+    cout<<"\nCREAZIONE ALBERO\n";
+    //La root è la stringa vuota
+    suffix_tree_node* root = build_suffix_tree_node(NULL,"\0");
+    for(int i=0;i<max_size;i++){
+        //Viene elaborato prima l'ultima stringa
+        const char* lyndon_word=list_of_lyndon_words[icfl_list.size()-1];
+        if(i<strlen(lyndon_word)){
+            //La stringa si legge da destra verso sinistra
+            int starting_position= strlen(lyndon_word)-1-i;
+            add_suffix_in_tree(root,lyndon_word+starting_position,icfl_list[icfl_list.size()-1]+starting_position);
+        }
+        for(int j=0;j<icfl_list.size()-1;j++){
+            const char* lyndon_word=list_of_lyndon_words[j];
+            if(i<strlen(lyndon_word)){
+                //La stringa si legge da destra verso sinistra
+                int starting_position= strlen(lyndon_word)-1-i;
+                add_suffix_in_tree(root,lyndon_word+starting_position,icfl_list[j]+starting_position);
+            }
         }
     }
     

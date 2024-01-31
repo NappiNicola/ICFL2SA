@@ -26,7 +26,8 @@ typedef struct suffix_tree_node{
 
 suffix_tree_node* build_suffix_tree_node(suffix_tree_node* father,const char* suffix);
 bool add_suffix_in_tree(suffix_tree_node* root,const char* suffix,int indice);
-int16_t find_index_of_child_with_the_same_suffix(suffix_tree_node* node, const char* suffix);
+int16_t find_index_of_child_a_is_prefix_of_b(suffix_tree_node* node, const char* suffix);
+int16_t find_index_of_child_b_is_prefix_of_a(suffix_tree_node* node,const char* suffix);
 void stampa_suffix_tree(suffix_tree_node* root);
 
 typedef struct nodes_vector
