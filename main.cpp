@@ -7,6 +7,8 @@
 #include "factorizations.h"
 #include "trie_node_utils.h"
 #include"utils.h"
+#include "custom_suffix_tree.h"
+#include <string.h>
 
 using namespace std;
 
@@ -111,39 +113,53 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
         cout<<word->at(i);
     }
 
+    cout<<endl;
+
+    //Le parole di Lyndon ne possono essere al più una per ogni lettera della stringa in input
+    char** list_of_lyndon_words=(char**)malloc(sizeof(char*)*word->length());
+    for(int i=0;i<icfl_list.size()-1;i++){
+        const char* lyndon_word="\0";
+        for (int j=icfl_list[i];j<icfl_list[i+1];j++){
+            lyndon_word=append(lyndon_word,word->at(j));
+        }
+        list_of_lyndon_words[i]=strdup(lyndon_word);
+    }
+    //L'ultima parola di Lyndon
+    const char* lyndon_word="\0";
+    for(int i=icfl_list[icfl_list.size()-1];i<word->length();i++){
+        lyndon_word=append(lyndon_word,word->at(i));
+    }
+    list_of_lyndon_words[icfl_list.size()-1]=strdup(lyndon_word);
+
+
+    for(int i=0;i<icfl_list.size();i++){
+        cout<<list_of_lyndon_words[i]<<" ";
+    }
+    cout<<endl;
+
+    //La root è la stringa vuota
+    cout<<"\nCREAZIONE ALBERO\n";
+    suffix_tree_node* root = build_suffix_tree_node(NULL,"\0");
+    for(int i=0;i<icfl_list.size();i++){
+        const char* lyndon_word=list_of_lyndon_words[i];
+        cout<<lyndon_word<<endl;
+        for(int j=strlen(lyndon_word)-1;j>=0;j--){
+            add_suffix_in_tree(root,lyndon_word+j,0);
+        }
+    }
+    
+
+    stampa_suffix_tree(root);
 
     cout<<endl;
 
-    // Creazione root del prefix tree
-    trie_node* root = new trie_node((*word).length(), word);
 
-    // STEP 1: Costruzione prefix tree (in-prefix merge)
-    root = run_word(icfl_list, word, root);
 
-    // STEP 2: Costruzione SA dal prefix tree (common-prefix merge + concatenation merge)
-    vector<int> suffix_array = computeSuffixArray(root);
 
-    return suffix_array;
+    return icfl_list;
+
 }
 
-bool check_suffix_array(string* word, vector<int>& suffix_array) {
-
-    bool check_SA = true;
-    int word_length = (*word).length();
-
-    for(int i = 0; i < suffix_array.size() - 1; i++) {
-
-        //string suffix_i = (*word).substr(suffix_array.at(i), word_length - suffix_array.at(i));
-        //string suffix_next_i = (*word).substr(suffix_array.at(i+1), word_length - suffix_array.at(i + 1));
-
-        if((*word).substr(suffix_array.at(i), word_length - suffix_array.at(i)) > (*word).substr(suffix_array.at(i+1), word_length - suffix_array.at(i + 1))) {
-            check_SA = false;
-            break;
-        }
-    }
-
-    return check_SA;
-}
 
 // EXP 1: word given by user
 void experiment_given_word() {
@@ -158,56 +174,6 @@ void experiment_given_word() {
     cout << endl;
 
     vector<int> suffix_array = sorting_suffixes_via_icfl_trie(&word);
-
-    cout << "suffix array: [ ";
-    for(int i=0; i < suffix_array.size(); i++) {
-        cout << suffix_array.at(i) << " ";
-    }
-    cout << "]" << endl;
-
-    // CHECK SUFFIX ARRAY
-    bool check_SA = check_suffix_array(&word, suffix_array);
-    if(check_SA) {
-        cout << "SA correct!" << endl;
-    } else {
-        cout << "SA not correct!" << endl;
-    }
-
-    return;
-}
-
-// EXP 2: generate rndom word of length given by the user
-void experiment_generate_word() {
-
-    int length;
-
-    cout << "inserisci lunghezza: ";
-    cin >> length;
-
-    cout << endl;
-
-    srand(time(0));
-    string str = "abcdefghijklmnopqrstuvwxyz";
-    random_shuffle(str.begin(), str.end());
-    string word = str.substr(0, length);
-    cout << "word: " << word << endl;
-
-    vector<int> suffix_array = sorting_suffixes_via_icfl_trie(&word);
-
-
-    cout << "suffix array: " << endl;
-    for(int i=0; i < suffix_array.size(); i++) {
-        cout << suffix_array.at(i) << " ";
-    }
-    cout << endl;
-
-    // CHECK SUFFIX ARRAY
-    bool check_SA = check_suffix_array(&word, suffix_array);
-    if(check_SA) {
-        cout << "SA correct!" << endl;
-    } else {
-        cout << "SA not correct!" << endl;
-    }
 
     return;
 }

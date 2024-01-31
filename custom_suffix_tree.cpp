@@ -17,7 +17,7 @@ nodes_vector* init_nodes_vector(size_t size){
 bool add_in_nodes_vector(nodes_vector* x,suffix_tree_node* element){
     if (x->size==x->used){
         x->size += 1;
-        x->data = (suffix_tree_node**)realloc(x->data,x->size);
+        x->data = (suffix_tree_node**)realloc(x->data,sizeof(suffix_tree_node*)*x->size);
     }
     x->data[x->used++]=element;
 
@@ -26,7 +26,7 @@ bool add_in_nodes_vector(nodes_vector* x,suffix_tree_node* element){
 
 //Costruttore del nodo prefix_tree_node
 
-suffix_tree_node* build_suffix_tree_node(suffix_tree_node* father,string* suffix){
+suffix_tree_node* build_suffix_tree_node(suffix_tree_node* father,const char* suffix){
     suffix_tree_node* x= (suffix_tree_node*)malloc(sizeof(suffix_tree_node));
 
     x->father=father;
@@ -46,11 +46,11 @@ IN: Root,Prefix,Indice
 OUT: Bool (True se l'inserimento è andato a buon fine)
 */
 
-bool add_suffix_in_tree(suffix_tree_node* root,string* suffix,int indice){
+bool add_suffix_in_tree(suffix_tree_node* root,const char* suffix,int indice){
 
     //Controlliamo se il suffisso che vogliamo inserire è contenuto nel nodo in cui ci troviamo
 
-    if(strcmp(root->suffix->c_str(),suffix->c_str())==0){
+    if(strcmp(root->suffix,suffix)==0){
         return add_in_int_vector(root->array_of_indexes,indice);
     }
 
@@ -79,16 +79,31 @@ IN: Nodo, Prefix
 OUT: indice del figlio che ha lo stesso prefisso di Prefix 
 */
 
-int16_t find_index_of_child_with_the_same_suffix(suffix_tree_node* node,string* suffix){
+int16_t find_index_of_child_with_the_same_suffix(suffix_tree_node* node,const char* suffix){
     for(int16_t i=0;i<node->sons->size;i++){
 
             //SE E SOLO SE IL SUFFISSO È MAGGIORE O UGUALE AL SUFFISSO NEL FIGLIO DEL NODO
             //Questo perché se il figlio del nodo avesse una cardinalità maggiore, sicuramente non sarà prefisso.
-            if(suffix->length() >= node->sons->data[i]->suffix->length()){
-                if (suffix->compare(0,node->sons->data[i]->suffix->length(),*node->sons->data[i]->suffix) == 0){
+            if(strlen(suffix) >= strlen(node->sons->data[i]->suffix)){
+                if (std::string(suffix).compare(0,strlen(node->sons->data[i]->suffix),node->sons->data[i]->suffix) == 0){
                     return i;
                 }
             }
     }
     return -1;
+}
+
+
+void stampa_suffix_tree(suffix_tree_node* root){
+    if (root->sons->size==0){
+        cout<<"("<<root->suffix<<")";
+        return;
+    }
+    cout<<root->suffix<<"(";
+    for(size_t i = 0; i<root->sons->used;i++){
+        stampa_suffix_tree(root->sons->data[i]);
+    }
+    cout<<")";
+
+    return;
 }
