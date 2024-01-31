@@ -144,11 +144,11 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
         const char* lyndon_word=list_of_lyndon_words[i];
         cout<<lyndon_word<<endl;
         for(int j=strlen(lyndon_word)-1;j>=0;j--){
-            add_suffix_in_tree(root,lyndon_word+j,0);
+            add_suffix_in_tree(root,lyndon_word+j,icfl_list[i]+j);
         }
     }
     
-
+    cout<<"\nALBERO OTTENUTO\n";
     stampa_suffix_tree(root);
 
     cout<<endl;

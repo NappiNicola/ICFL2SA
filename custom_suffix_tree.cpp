@@ -96,14 +96,23 @@ int16_t find_index_of_child_with_the_same_suffix(suffix_tree_node* node,const ch
 
 void stampa_suffix_tree(suffix_tree_node* root){
     if (root->sons->size==0){
-        cout<<"("<<root->suffix<<")";
+        cout<<"("<<root->suffix;
+        cout<<"[";
+        for(size_t j = 0; j<root->array_of_indexes->size;j++){
+            cout<<root->array_of_indexes->data[j]<<",";
+        }
+        cout<<"])";
         return;
     }
     cout<<root->suffix<<"(";
     for(size_t i = 0; i<root->sons->used;i++){
         stampa_suffix_tree(root->sons->data[i]);
     }
-    cout<<")";
+    cout<<"[";
+        for(size_t j = 0; j<root->array_of_indexes->size;j++){
+            cout<<root->array_of_indexes->data[j]<<",";
+        }
+    cout<<"])";
 
     return;
 }
