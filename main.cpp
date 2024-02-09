@@ -8,6 +8,7 @@
 #include "trie_node_utils.h"
 #include"utils.h"
 #include "custom_suffix_tree.h"
+#include "second_phase.h"
 #include <string.h>
 
 using namespace std;
@@ -170,9 +171,22 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
 
     cout<<endl;
 
+    init_chains_of_prefixes(root,word->length());
+    
+    /*
+    array_of_int_vector* array_of_chains = init_array_of_int_vector(strlen(word->c_str()));
 
+    get_chains(array_of_chains,root,word->c_str(),icfl_list);
+    cout<<"a"<<endl;
+    print_array_of_vector(array_of_chains);
+    */
 
+    get_chains(root,word->c_str(),icfl_list);
 
+    for(int i=0;i<root->sons->used;i++){
+        print_array_of_vector(root->sons->data[i]->chains_of_suffixes);
+    }
+    
     return icfl_list;
 
 }
@@ -195,10 +209,23 @@ void experiment_given_word() {
     return;
 }
 
+void experiment_given_word_by_cli(string word) {
+    //cout<<"###################### experiment_given_word"<<endl;
+    cout<<endl<<"Stringa: "<< word;
+    cout << endl;
+
+    vector<int> suffix_array = sorting_suffixes_via_icfl_trie(&word);
+
+    return;
+}
+
 int main(int argc, char** argv) {
 
-    experiment_given_word();
+    //experiment_given_word();
     //experiment_generate_word();
+
+    experiment_given_word_by_cli(string(argv[1]));
+
 
     return 0;
 

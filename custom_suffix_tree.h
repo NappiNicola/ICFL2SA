@@ -22,6 +22,9 @@ typedef struct suffix_tree_node{
     //Figli del nodo
     nodes_vector* sons;
 
+    //Una catena per ogni sotto albero
+    array_of_int_vector* chains_of_suffixes;
+
 }suffix_tree_node;
 
 suffix_tree_node* build_suffix_tree_node(suffix_tree_node* father,const char* suffix);
@@ -40,6 +43,7 @@ typedef struct nodes_vector
 
 nodes_vector* init_nodes_vector(size_t size);
 bool add_in_nodes_vector(nodes_vector* x,suffix_tree_node* element);
-
+bool init_chains_of_prefixes(suffix_tree_node* root,int size_of_the_word);
+int LCP(char* w, int index1,int index2);
 
 #endif

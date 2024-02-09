@@ -154,3 +154,31 @@ void stampa_suffix_tree(suffix_tree_node* root){
 
     return;
 }
+
+bool init_chains_of_prefixes(suffix_tree_node* root,int size_of_the_word){
+
+    root->chains_of_suffixes = init_array_of_int_vector(size_of_the_word);
+
+    //Itero ricorsivamente
+    if(root->sons->used==0 && root->father->father!=NULL){
+        add_in_array_of_int_vector(root->chains_of_suffixes,duplicate_int_vector(root->array_of_indexes));
+        //cout<<root->suffix<<endl;
+        //print_array_of_vector(root->chains_of_suffixes);
+        return 1;
+    }
+
+    for(int i=0;i<root->sons->used;i++){
+        init_chains_of_prefixes(root->sons->data[i],size_of_the_word);
+    }
+
+    return 1;
+
+}
+
+int LCP(char* w, int index1,int index2){
+    int i=0;
+    while (w[index1+i]==w[index2+i]){
+        i++;
+    }
+    return i;
+}
