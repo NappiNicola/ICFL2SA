@@ -31,10 +31,6 @@ int_vector* in_prefix_merge(const char* S, vector<int> icfl_list, int_vector* e,
     int i=0;
     int j=0;
 
-    print_int_vector(e);
-    cout<<"+";
-    print_int_vector(g);
-
     //cout<<" last:"<<icfl_list[icfl_list.size()-1]<<" ";
 
     while( i<e->used && j<g->used){
@@ -129,9 +125,6 @@ int_vector* in_prefix_merge(const char* S, vector<int> icfl_list, int_vector* e,
         add_in_int_vector(result,e->data[i]);
         i++;
     }
-    cout<<"=";
-    print_int_vector(result);
-    cout<<endl;
 
     return result;
 }
@@ -141,7 +134,7 @@ array_of_int_vector* get_chains(suffix_tree_node* root,const char* S, vector<int
     if(root->sons->used==0){
         array_of_int_vector* chain = init_array_of_int_vector(strlen(S));
         get_ranks_from_leaf_to_root(root,S,chain,icfl_list);
-        print_array_of_vector(chain);
+        //print_array_of_vector(chain);
         compute_chain(chain,S,icfl_list);
         return root->chains_of_suffixes;
     }
@@ -187,6 +180,11 @@ array_of_int_vector* get_ranks_from_leaf_to_root(suffix_tree_node* root,const ch
 }
 
 void compute_chain(array_of_int_vector* sequence,const char* S,vector<int> icfl_list){
+
+    //Viene effettuato in_prefix_merge della catena passata in inuput 
+    //Il primo puntatore è il puntatore della catena in root
+    //
+
     int_vector* root_sequence=sequence->data[0];
     for(int i=1;i<sequence->used;i++){
         sequence->data[0]=in_prefix_merge(S,icfl_list,sequence->data[0],sequence->data[i]);

@@ -26,6 +26,11 @@ bool add_in_int_vector(int_vector* x,int element){
     return 1;
 }
 
+bool element_in_int_vector(int_vector* x,int element){
+    for(int i=0;i<x->used;i++) if(x->data[i]==element) return true;
+    return false;
+}
+
     
 int_vector* duplicate_int_vector(int_vector* x){
     int_vector* temp = (int_vector*)malloc(sizeof(int_vector));
@@ -63,7 +68,7 @@ void print_int_vector(int_vector* x){
     for(int i=0;i<x->used;i++){
         cout<<x->data[i]<<",";
     }
-    
+
 }
 
 void print_array_of_vector(array_of_int_vector* x){
@@ -76,6 +81,16 @@ void print_array_of_vector(array_of_int_vector* x){
 
     cout<<endl;
 
+}
+
+int_vector* merge_array_of_vector(array_of_int_vector* x){
+    int_vector* res = init_int_vector(0);
+    for(int i=0;i<x->used;i++){
+        for(int j=0;j<x->data[i]->used;j++){
+            add_in_int_vector(res,x->data[i]->data[j]);
+        }
+    }
+    return res;
 }
 
 int* intdup(int* src, size_t len){

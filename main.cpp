@@ -9,6 +9,7 @@
 #include"utils.h"
 #include "custom_suffix_tree.h"
 #include "second_phase.h"
+#include "third_phase.h"
 #include <string.h>
 
 using namespace std;
@@ -183,10 +184,21 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
 
     get_chains(root,word->c_str(),icfl_list);
 
+    /*
     for(int i=0;i<root->sons->used;i++){
         print_array_of_vector(root->sons->data[i]->chains_of_suffixes);
     }
-    
+    */
+   
+    array_of_int_vector* group_ranking = init_array_of_int_vector(0);
+    for(int i=0;i<root->sons->used;i++){
+        add_in_array_of_int_vector(group_ranking,get_common_prefix_merge(root->sons->data[i]));
+    }
+
+    print_int_vector(merge_array_of_vector(group_ranking));
+    cout<<endl;
+
+
     return icfl_list;
 
 }
