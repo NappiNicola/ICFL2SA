@@ -22,8 +22,11 @@ typedef struct suffix_tree_node{
     //Figli del nodo
     nodes_vector* sons;
 
-    //Una catena per ogni sotto albero
+    //Una catena per ogni sotto albero, è importante solo quella del figlio del primo nodo
     array_of_int_vector* chains_of_suffixes;
+
+    //Chain of suffixes dal figlio di root al nodo
+    int_vector* common_chain_of_suffiexes;
 
 }suffix_tree_node;
 

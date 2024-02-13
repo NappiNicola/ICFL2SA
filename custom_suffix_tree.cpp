@@ -34,6 +34,8 @@ suffix_tree_node* build_suffix_tree_node(suffix_tree_node* father,const char* su
 
     x->array_of_indexes = init_int_vector(0);
     x->sons=init_nodes_vector(0);
+
+    x->common_chain_of_suffiexes = init_int_vector(0);
     
     return x;
 }

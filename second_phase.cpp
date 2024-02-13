@@ -197,5 +197,31 @@ void compute_chain(array_of_int_vector* sequence,const char* S,vector<int> icfl_
 }
 
 
+void get_chains_2(const char* S, vector<int> icfl_list,suffix_tree_node* root,int_vector* prev_common_chain_of_suffiexes){
+
+    root->common_chain_of_suffiexes = in_prefix_merge(S,icfl_list,prev_common_chain_of_suffiexes,root->array_of_indexes);
+
+    if(root->sons->used==0){
+        add_chain_to_root(root,root->common_chain_of_suffiexes);
+    }
+
+    else{
+        for(int i=0;i<root->sons->used;i++){
+            get_chains_2(S, icfl_list,root->sons->data[i],root->common_chain_of_suffiexes);
+        }
+    }
+
+
+
+}
+
+void add_chain_to_root(suffix_tree_node* root,int_vector* common_chain_of_suffiexes){
+    if(root->father->father==NULL){
+        add_in_array_of_int_vector(root->chains_of_suffixes,common_chain_of_suffiexes);
+    }
+    else{
+        add_chain_to_root(root->father,common_chain_of_suffiexes);
+    }
+}
 
 

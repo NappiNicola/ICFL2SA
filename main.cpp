@@ -146,7 +146,7 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
         } 
     }
 
-    cout<<"\nCREAZIONE ALBERO\n";
+    //cout<<"\nCREAZIONE ALBERO\n";
     //La root è la stringa vuota
     suffix_tree_node* root = build_suffix_tree_node(NULL,"\0");
     for(int i=0;i<max_size;i++){
@@ -167,8 +167,8 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
         }
     }
     
-    cout<<"\nALBERO OTTENUTO\n";
-    stampa_suffix_tree(root);
+    //cout<<"\nALBERO OTTENUTO\n";
+    //stampa_suffix_tree(root);
 
     cout<<endl;
 
@@ -182,7 +182,9 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     print_array_of_vector(array_of_chains);
     */
 
-    get_chains(root,word->c_str(),icfl_list);
+    //get_chains(root,word->c_str(),icfl_list);
+
+    get_chains_2(word->c_str(),icfl_list,root,root->common_chain_of_suffiexes);
 
     /*
     for(int i=0;i<root->sons->used;i++){
@@ -231,13 +233,43 @@ void experiment_given_word_by_cli(string word) {
     return;
 }
 
+char* experiment_given_word_by_input_file() {
+    //cout<<"###################### experiment_given_word"<<endl;
+    char * word = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    FILE* fp = fopen("./input_file.txt", "r");
+    if (fp == NULL)
+        exit(EXIT_FAILURE);
+
+    getline(&word, &len, fp);
+
+    cout<<endl<<"Stringa: "<< word;
+    cout << endl;
+
+    std::string x(word);
+
+    vector<int> suffix_array = sorting_suffixes_via_icfl_trie(&x);
+
+    return word;
+}
+
 int main(int argc, char** argv) {
 
     //experiment_given_word();
     //experiment_generate_word();
 
-    experiment_given_word_by_cli(string(argv[1]));
+    //experiment_given_word_by_cli(string(argv[1]));
 
+    clock_t tStart = clock();
+
+    experiment_given_word_by_input_file();
+
+    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    return 0;
+
+    
 
     return 0;
 
