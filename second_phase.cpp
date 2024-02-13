@@ -4,6 +4,7 @@
 #include <string.h>
 #include <vector>
 #include "second_phase.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -225,3 +226,10 @@ void add_chain_to_root(suffix_tree_node* root,int_vector* common_chain_of_suffie
 }
 
 
+void sort_sons_of_all_nodes(suffix_tree_node* root){
+    quicksort_of_nodes(root->sons,0,root->sons->used-1);
+
+    for(int i=0;i<root->sons->used;i++){
+        sort_sons_of_all_nodes(root->sons->data[i]);
+    }
+}

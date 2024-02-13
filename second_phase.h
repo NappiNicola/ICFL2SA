@@ -5,6 +5,7 @@
 
 using namespace std;
 
+void sort_sons_of_all_nodes(suffix_tree_node* root);
 
 int get_factor(vector<int> icfl_list,int index);
 int_vector* in_prefix_merge(const char* S, vector<int> icfl_list, int_vector* e, int_vector* g);

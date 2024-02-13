@@ -18,7 +18,7 @@ int_vector* init_int_vector(size_t size){
 
 bool add_in_int_vector(int_vector* x,int element){
     if (x->size==x->used){
-        x->size += 1;
+        x->size += 10;
         x->data = (int*)realloc(x->data,sizeof(int)*x->size);
     }
     x->data[x->used++]=element;
@@ -54,7 +54,7 @@ array_of_int_vector* init_array_of_int_vector(size_t size){
 
 bool add_in_array_of_int_vector(array_of_int_vector* x,int_vector* element){
     if (x->size==x->used){
-        x->size += 1;
+        x->size += 1000;
         x->data = (int_vector**)realloc(x->data,sizeof(int_vector*)*x->size);
     }
     x->data[x->used++]=element;

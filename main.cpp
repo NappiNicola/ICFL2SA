@@ -10,6 +10,7 @@
 #include "custom_suffix_tree.h"
 #include "second_phase.h"
 #include "third_phase.h"
+#include "check.h"
 #include <string.h>
 
 using namespace std;
@@ -182,7 +183,7 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
 
     cout<<endl;
 
-    quicksort_of_nodes(root->sons,0,root->sons->used-1);
+    sort_sons_of_all_nodes(root);
 
     init_chains_of_prefixes(root,word->length());
     
@@ -209,8 +210,12 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
         add_in_array_of_int_vector(group_ranking,get_common_prefix_merge(root->sons->data[i]));
     }
 
-    print_int_vector(merge_array_of_vector(group_ranking));
+    int_vector* SA = merge_array_of_vector(group_ranking);
+
+    print_int_vector(SA);
     cout<<endl;
+
+    cout<<"Il SA è valido: "<<check_suffix_array(word->c_str(),SA)<<endl;
 
 
     return icfl_list;
