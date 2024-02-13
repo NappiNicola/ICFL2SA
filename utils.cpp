@@ -1,5 +1,6 @@
 #include<iostream>
 #include<string.h>
+#include "custom_suffix_tree.h"
 
 #include "generic_vector.h"
 #include "utils.h"
@@ -51,5 +52,34 @@ void quicksort(int_vector* x, int start, int end){
         x->data[j]=temp;
         quicksort(x,start,j-1);
         quicksort(x,j+1,end);
+    }
+}
+
+void quicksort_of_nodes(nodes_vector* x, int start, int end){
+    int i, j, pivot;
+    suffix_tree_node* temp;
+    if(start<end){
+
+        pivot=start;
+        
+        i=start;
+        j=end;     
+
+        while(i<j){
+            while(strcmp(x->data[i]->suffix,x->data[pivot]->suffix)<=0 && i<end) i++;
+            while(strcmp(x->data[j]->suffix,x->data[pivot]->suffix)>0) j--;
+
+            if(i<j){   
+               temp=x->data[i];
+               x->data[i]=x->data[j];
+               x->data[j]=temp;
+            }
+        }
+
+        temp=x->data[pivot];
+        x->data[pivot]=x->data[j];
+        x->data[j]=temp;
+        quicksort_of_nodes(x,start,j-1);
+        quicksort_of_nodes(x,j+1,end);
     }
 }

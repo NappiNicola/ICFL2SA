@@ -103,6 +103,7 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
 
     printVector(icfl_list, "Stampa ICFL");
 
+    /*
     for(int i=0;i<icfl_list.size()-1;i++){
         for (int j=icfl_list[i];j<icfl_list[i+1];j++){
             cout<<word->at(j);
@@ -110,10 +111,16 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
         cout<<", ";
 
     }
+    */
+    
 
+    /*
     for(int i=icfl_list[icfl_list.size()-1];i<word->length();i++){
         cout<<word->at(i);
     }
+    */
+
+    
 
     cout<<endl;
 
@@ -133,11 +140,14 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     }
     list_of_lyndon_words[icfl_list.size()-1]=strdup(lyndon_word);
 
-
+    /*
     for(int i=0;i<icfl_list.size();i++){
         cout<<list_of_lyndon_words[i]<<" ";
     }
     cout<<endl;
+    */
+
+    
 
     int max_size=0;
     for(int i=0;i<icfl_list.size();i++){
@@ -171,6 +181,8 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     //stampa_suffix_tree(root);
 
     cout<<endl;
+
+    quicksort_of_nodes(root->sons,0,root->sons->used-1);
 
     init_chains_of_prefixes(root,word->length());
     
