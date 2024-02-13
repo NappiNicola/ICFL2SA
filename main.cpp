@@ -157,6 +157,7 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
         } 
     }
 
+    clock_t tStart = clock();
     //cout<<"\nCREAZIONE ALBERO\n";
     //La root è la stringa vuota
     suffix_tree_node* root = build_suffix_tree_node(NULL,"\0");
@@ -178,14 +179,20 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
         }
     }
     
+    printf("Creazione albero, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
     //cout<<"\nALBERO OTTENUTO\n";
     //stampa_suffix_tree(root);
 
     cout<<endl;
 
+    tStart = clock();
     sort_sons_of_all_nodes(root);
-
+    printf("sort_sons_of_all_nodes, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    
+    tStart = clock();
     init_chains_of_prefixes(root,word->length());
+    printf("init_chains_of_prefixes, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     
     /*
     array_of_int_vector* array_of_chains = init_array_of_int_vector(strlen(word->c_str()));
@@ -197,7 +204,9 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
 
     //get_chains(root,word->c_str(),icfl_list);
 
+    tStart = clock();
     get_chains_2(word->c_str(),icfl_list,root,root->common_chain_of_suffiexes);
+    printf("get_chains_2, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
     /*
     for(int i=0;i<root->sons->used;i++){
@@ -205,6 +214,8 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     }
     */
    
+   tStart = clock();
+
     array_of_int_vector* group_ranking = init_array_of_int_vector(0);
     for(int i=0;i<root->sons->used;i++){
         add_in_array_of_int_vector(group_ranking,get_common_prefix_merge(root->sons->data[i]));
@@ -212,10 +223,13 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
 
     int_vector* SA = merge_array_of_vector(group_ranking);
 
+    printf("common+concat, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
     print_int_vector(SA);
     cout<<endl;
 
-    cout<<"Il SA è valido: "<<check_suffix_array(word->c_str(),SA)<<endl;
+    if(check_suffix_array(word->c_str(),SA)) cout<<"Il SA è valido."<<endl;
+    
 
 
     return icfl_list;
@@ -284,9 +298,8 @@ int main(int argc, char** argv) {
     experiment_given_word_by_input_file();
 
     printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-    return 0;
-
     
+
 
     return 0;
 

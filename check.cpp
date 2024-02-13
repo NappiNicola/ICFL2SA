@@ -12,6 +12,9 @@ bool check_suffix_array(const char* S,int_vector* SA){
     for(int i=0;i<strlen(S)-1;i++){
         if(strcmp(S+SA->data[i],S+SA->data[i+1])>0){
             ord_bool = false;
+            //cout<<SA->data[i]<<endl;
+            //cout<<S+SA->data[i]<<endl;
+            //cout<<S+SA->data[i+1]<<endl;
         }
     }
     if(!ord_bool) cout<<"\nNon tutti i suffissi sono ordinati. \n";
