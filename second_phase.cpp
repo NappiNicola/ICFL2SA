@@ -15,13 +15,13 @@ int get_factor(vector<int> icfl_list,int index){
         return icfl_list.size()-1;
     }
 
-    for(int i=1;i<icfl_list.size();i++){
-        if(index >= icfl_list.at(i-1) && index <= icfl_list.at(i)){
+    for(int i=0;i<icfl_list.size()-1;i++){
+        if(index >= icfl_list.at(i) && index < icfl_list.at(i+1)){
             return index;
         }
     }
 
-    return 0;
+    return -1;
 
 }
 
@@ -75,12 +75,16 @@ int_vector* in_prefix_merge(const char* S, vector<int> icfl_list, int_vector* e,
                 //LCP = Lunghezza dell suffisso del padre
 
                 if(
-                    S[element_of_g + LCP((char*)S,element_of_e,element_of_g) +1] 
+                    S[element_of_g + LCP((char*)S,element_of_e,element_of_g)] 
                     <
-                    S[element_of_e + LCP((char*)S,element_of_e,element_of_g) +1]){
+                    S[element_of_e + LCP((char*)S,element_of_e,element_of_g)]){
+
+                        //cout<<element_of_e<<endl<<element_of_g<<endl;
+                        //cout<<S+element_of_e<<endl<<S+element_of_g<<endl<<LCP((char*)S,element_of_e,element_of_g)<<endl;
                     
-                    add_in_int_vector(result,element_of_g);
-                    j++;
+                    
+                        add_in_int_vector(result,element_of_g);
+                        j++;
                 }
 
                 else{
@@ -100,7 +104,7 @@ int_vector* in_prefix_merge(const char* S, vector<int> icfl_list, int_vector* e,
 
                 else{
 
-                    if(S[element_of_g + LCP((char*)S,element_of_e,element_of_g) +1] < S[element_of_e + LCP((char*)S,element_of_e,element_of_g) +1]){
+                    if(S[element_of_g + LCP((char*)S,element_of_e,element_of_g)] < S[element_of_e + LCP((char*)S,element_of_e,element_of_g)]){
                         add_in_int_vector(result,element_of_g);
                         j++;
                     }
