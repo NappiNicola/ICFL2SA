@@ -100,6 +100,8 @@ trie_node *run_word(vector<int> icfl_list_index, string *word, trie_node* root) 
 vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     //cout<<"###################### sorting_suffixes_via_icfl_trie"<<endl;
 
+    int lenght_of_word=strlen(word->c_str());
+
     vector<int> icfl_list = ICFL_recursive(word, (*word).length());
 
     printVector(icfl_list, "Stampa ICFL");
@@ -164,16 +166,18 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     for(int i=0;i<max_size;i++){
         //Viene elaborato prima l'ultima stringa
         const char* lyndon_word=list_of_lyndon_words[icfl_list.size()-1];
-        if(i<strlen(lyndon_word)){
+        //if(i<strlen(lyndon_word)){
+        if(i< lenght_of_word - icfl_list[icfl_list.size()-1]){
             //La stringa si legge da destra verso sinistra
-            int starting_position= strlen(lyndon_word)-1-i;
+            //int starting_position= strlen(lyndon_word)-1-i;
+            int starting_position= lenght_of_word - icfl_list[icfl_list.size()-1]-1-i;
             add_suffix_in_tree(root,lyndon_word+starting_position,icfl_list[icfl_list.size()-1]+starting_position);
         }
         for(int j=0;j<icfl_list.size()-1;j++){
             const char* lyndon_word=list_of_lyndon_words[j];
-            if(i<strlen(lyndon_word)){
+            if(i<icfl_list[j+1]-icfl_list[j]){
                 //La stringa si legge da destra verso sinistra
-                int starting_position= strlen(lyndon_word)-1-i;
+                int starting_position= icfl_list[j+1]-icfl_list[j]-1-i;
                 add_suffix_in_tree(root,lyndon_word+starting_position,icfl_list[j]+starting_position);
             }
         }

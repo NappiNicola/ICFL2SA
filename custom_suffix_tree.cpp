@@ -66,30 +66,12 @@ bool add_suffix_in_tree(suffix_tree_node* root,const char* suffix,int indice){
     //Il prefisso non è in nessuno dei figli quindi prima creamo un figlio, lo aggiungiamo ai figli di root e gli inseriamo l'indice
 
     if(index_of_child_with_the_same_suffix == -1){
-         /*
-        Es. 
-        Suffisso da inserire: ab
-        Nuffisso presente nel nodo: abba
-        */
-        int16_t index_of_b_a = find_index_of_child_b_is_prefix_of_a(root,suffix);
-        if(index_of_b_a==-1){
-            //Creo un nuovo figlio del nodo root
-            suffix_tree_node* x=build_suffix_tree_node(root,suffix);
-            add_in_int_vector(x->array_of_indexes,indice);
-            add_in_nodes_vector(root->sons,x);
-            x->father=root;
-
-            return true;
-        }else{
-            suffix_tree_node* x=build_suffix_tree_node(root,suffix);
-            add_in_int_vector(x->array_of_indexes,indice);
-            add_in_nodes_vector(x->sons,root->sons->data[index_of_b_a]);
-            x->father=root;
-            root->sons->data[index_of_b_a]->father=x;
-            root->sons->data[index_of_b_a]=x;
-
-            return true;
-        }
+        //Creo un nuovo figlio del nodo root
+        suffix_tree_node* x=build_suffix_tree_node(root,suffix);
+        add_in_int_vector(x->array_of_indexes,indice);
+        add_in_nodes_vector(root->sons,x);
+        x->father=root;
+        return true;
     }
 
     // Il prefisso è contenuto in uno dei dei figli di root, ricorsivamente chiamiamo la funzione su tale figlio
@@ -110,24 +92,19 @@ int16_t find_index_of_child_a_is_prefix_of_b(suffix_tree_node* node,const char* 
 
             //SE E SOLO SE IL SUFFISSO È MAGGIORE O UGUALE AL SUFFISSO NEL FIGLIO DEL NODO
             //Questo perché se il figlio del nodo avesse una cardinalità maggiore, sicuramente non sarà prefisso.
+            /*
             if(strlen(suffix) >= strlen(node->sons->data[i]->suffix)){
                 if (std::string(suffix).compare(0,strlen(node->sons->data[i]->suffix),node->sons->data[i]->suffix) == 0){
                     return i;
                 }
             }
-    }
-    return -1;
-}
-
-int16_t find_index_of_child_b_is_prefix_of_a(suffix_tree_node* node,const char* suffix){
-    for(int16_t i=0;i<node->sons->size;i++){
-
-            //SE E SOLO SE IL SUFFISSO È MAGGIORE O UGUALE AL SUFFISSO NEL FIGLIO DEL NODO
-            //Questo perché se il figlio del nodo avesse una cardinalità maggiore, sicuramente non sarà prefisso.
-            if(strlen(suffix) < strlen(node->sons->data[i]->suffix)){
-                if (std::string(node->sons->data[i]->suffix).compare(0,strlen(suffix),suffix) == 0){
-                    return i;
-                }
+            */
+           //cout<<suffix<<endl<<node->sons->data[i]->suffix<<endl;
+            //cout<<LCP_with_given_strings(suffix,node->sons->data[i]->suffix)<<endl<<strlen(suffix)<<endl;
+            if(LCP_with_given_strings(suffix,node->sons->data[i]->suffix) == strlen(node->sons->data[i]->suffix)){
+                     //cout<<suffix<<endl<<node->sons->data[i]->suffix<<endl;
+                     //cout<<LCP_with_given_strings(suffix,node->sons->data[i]->suffix)<<endl<<strlen(suffix)<<endl;
+                return i;
             }
     }
     return -1;
@@ -180,6 +157,14 @@ bool init_chains_of_prefixes(suffix_tree_node* root,int size_of_the_word){
 int LCP(char* w, int index1,int index2){
     int i=0;
     while (w[index1+i]==w[index2+i]){
+        i++;
+    }
+    return i;
+}
+int LCP_with_given_strings(const char* x,const char* y){
+    int i=0;
+    int max_len=strlen(x);
+    while (x[i]==y[i] && i<max_len){
         i++;
     }
     return i;
