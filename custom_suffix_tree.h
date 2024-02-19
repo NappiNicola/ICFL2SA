@@ -23,6 +23,7 @@ typedef struct suffix_tree_node{
     nodes_vector* sons;
 
     //Una catena per ogni sotto albero, è importante solo quella del figlio del primo nodo
+    //group_chains
     array_of_int_vector* chains_of_suffixes;
 
     //Chain of suffixes dal figlio di root al nodo
@@ -31,7 +32,7 @@ typedef struct suffix_tree_node{
 }suffix_tree_node;
 
 suffix_tree_node* build_suffix_tree_node(suffix_tree_node* father,const char* suffix);
-bool add_suffix_in_tree(suffix_tree_node* root,const char* suffix,int indice);
+suffix_tree_node* add_suffix_in_tree(suffix_tree_node* root,const char* suffix,int indice);
 int16_t find_index_of_child_a_is_prefix_of_b(suffix_tree_node* node, const char* suffix);
 void stampa_suffix_tree(suffix_tree_node* root);
 

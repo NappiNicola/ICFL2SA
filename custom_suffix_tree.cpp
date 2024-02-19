@@ -48,12 +48,13 @@ IN: Root,Prefix,Indice
 OUT: Bool (True se l'inserimento è andato a buon fine)
 */
 
-bool add_suffix_in_tree(suffix_tree_node* root,const char* suffix,int indice){
+suffix_tree_node* add_suffix_in_tree(suffix_tree_node* root,const char* suffix,int indice){
 
     //Controlliamo se il suffisso che vogliamo inserire è contenuto nel nodo in cui ci troviamo
 
     if(strcmp(root->suffix,suffix)==0){
-        return add_in_int_vector(root->array_of_indexes,indice);
+        add_in_int_vector(root->array_of_indexes,indice);
+        return NULL;
     }
 
     /*
@@ -71,7 +72,7 @@ bool add_suffix_in_tree(suffix_tree_node* root,const char* suffix,int indice){
         add_in_int_vector(x->array_of_indexes,indice);
         add_in_nodes_vector(root->sons,x);
         x->father=root;
-        return true;
+        return x;
     }
 
     // Il prefisso è contenuto in uno dei dei figli di root, ricorsivamente chiamiamo la funzione su tale figlio
@@ -136,15 +137,7 @@ void stampa_suffix_tree(suffix_tree_node* root){
 
 bool init_chains_of_prefixes(suffix_tree_node* root,int size_of_the_word){
 
-    root->chains_of_suffixes = init_array_of_int_vector(size_of_the_word);
-
-    //Itero ricorsivamente
-    if(root->sons->used==0 && root->father->father!=NULL){
-        add_in_array_of_int_vector(root->chains_of_suffixes,duplicate_int_vector(root->array_of_indexes));
-        //cout<<root->suffix<<endl;
-        //print_array_of_vector(root->chains_of_suffixes);
-        return 1;
-    }
+    root->chains_of_suffixes = init_array_of_int_vector(0);
 
     for(int i=0;i<root->sons->used;i++){
         init_chains_of_prefixes(root->sons->data[i],size_of_the_word);

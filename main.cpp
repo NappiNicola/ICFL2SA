@@ -1,13 +1,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
-#include <cmath>
 #include <time.h>
 #include "factorizations.h"
-#include "trie_node_utils.h"
-#include"utils.h"
+#include "utils.h"
 #include "custom_suffix_tree.h"
+#include "first_phase.h"
 #include "second_phase.h"
 #include "third_phase.h"
 #include "check.h"
@@ -16,85 +14,7 @@
 using namespace std;
 
 // STEP 1: COSTRUZIONE PREFIX TREE (in-prefix merge)
-trie_node *run_word(vector<int> icfl_list_index, string *word, trie_node* root) {
 
-    int word_len = (*word).length();
-    int icfl_list_size = icfl_list_index.size();
-
-    vector<int> icfl_list_support = vector<int>(0);
-    vector<int> icfl_list_support_len = vector<int>(0);
-    for(int i = 0; i < icfl_list_size; i++) {
-        icfl_list_support.push_back(icfl_list_index[i]);
-
-        if(i == icfl_list_size - 1) {
-            icfl_list_support_len.push_back(word_len - icfl_list_index[i]);
-        } else {
-            icfl_list_support_len.push_back(icfl_list_index[i+1] - icfl_list_index[i]);
-        }
-    }
-
-    // Sposta ultimo fattore in prima posizione
-    icfl_list_support.insert(icfl_list_support.begin(), icfl_list_support[icfl_list_support.size()-1]);
-    icfl_list_support_len.insert(icfl_list_support_len.begin(), icfl_list_support_len[icfl_list_support_len.size()-1]);
-    icfl_list_support.pop_back();
-    icfl_list_support_len.pop_back();
-
-    int suffix_len = 1;
-    int suffix_index = icfl_list_support.size() -1;
-
-    // word_index � l'indice sulla parola rispetto al suffisso su cui stiamo lavorando
-    int last_icfl_length = word_len - icfl_list_support[0];
-    int word_index = ((word_len - last_icfl_length - suffix_len)+word_len)%word_len;
-
-    int count_insertion = 0;
-    string back_suffix = "";
-    string suffix = "";
-    int back_suffix_len = 0;
-
-    while(true) {
-
-        if(count_insertion == word_len) {
-            break;
-        }
-
-        back_suffix = (*word).substr(icfl_list_support[suffix_index], icfl_list_support_len[suffix_index]);
-        back_suffix_len = back_suffix.length();
-
-        if(back_suffix_len >= suffix_len) {
-
-            suffix = back_suffix.substr(back_suffix_len-suffix_len,suffix_len);
-            //cout << word_index << endl;
-            //cout << suffix << endl;
-
-            add(root, word_index,suffix_len,icfl_list_index);
-            count_insertion++;
-
-        } else {
-
-            icfl_list_support.erase(icfl_list_support.begin() + suffix_index);
-            icfl_list_support_len.erase(icfl_list_support_len.begin() + suffix_index);
-
-        }
-
-        if(suffix_index > 0) {
-
-            suffix_index--;
-
-            word_index = (icfl_list_support[suffix_index] + icfl_list_support_len[suffix_index]- suffix_len + word_len)%word_len;
-
-        } else {
-            suffix_index = icfl_list_support.size() -1;
-            suffix_len++;
-
-            word_index = ((word_len - last_icfl_length - suffix_len) + word_len)%word_len;
-        }
-
-        continue;
-
-    }
-
-    return root;
-}
 
 // sorting_suffixes_via_icfl_trie
 vector<int> sorting_suffixes_via_icfl_trie(string* word) {
@@ -128,20 +48,7 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     cout<<endl;
 
     //Le parole di Lyndon ne possono essere al più una per ogni lettera della stringa in input
-    char** list_of_lyndon_words=(char**)malloc(sizeof(char*)*word->length());
-    for(int i=0;i<icfl_list.size()-1;i++){
-        const char* lyndon_word="\0";
-        for (int j=icfl_list[i];j<icfl_list[i+1];j++){
-            lyndon_word=append(lyndon_word,word->at(j));
-        }
-        list_of_lyndon_words[i]=strdup(lyndon_word);
-    }
-    //L'ultima parola di Lyndon
-    const char* lyndon_word="\0";
-    for(int i=icfl_list[icfl_list.size()-1];i<word->length();i++){
-        lyndon_word=append(lyndon_word,word->at(i));
-    }
-    list_of_lyndon_words[icfl_list.size()-1]=strdup(lyndon_word);
+    char** list_of_lyndon_words= get_lyndon_words(word,icfl_list);
 
     /*
     for(int i=0;i<icfl_list.size();i++){
@@ -162,26 +69,7 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     clock_t tStart = clock();
     //cout<<"\nCREAZIONE ALBERO\n";
     //La root è la stringa vuota
-    suffix_tree_node* root = build_suffix_tree_node(NULL,"\0");
-    for(int i=0;i<max_size;i++){
-        //Viene elaborato prima l'ultima stringa
-        const char* lyndon_word=list_of_lyndon_words[icfl_list.size()-1];
-        //if(i<strlen(lyndon_word)){
-        if(i< lenght_of_word - icfl_list[icfl_list.size()-1]){
-            //La stringa si legge da destra verso sinistra
-            //int starting_position= strlen(lyndon_word)-1-i;
-            int starting_position= lenght_of_word - icfl_list[icfl_list.size()-1]-1-i;
-            add_suffix_in_tree(root,lyndon_word+starting_position,icfl_list[icfl_list.size()-1]+starting_position);
-        }
-        for(int j=0;j<icfl_list.size()-1;j++){
-            const char* lyndon_word=list_of_lyndon_words[j];
-            if(i<icfl_list[j+1]-icfl_list[j]){
-                //La stringa si legge da destra verso sinistra
-                int starting_position= icfl_list[j+1]-icfl_list[j]-1-i;
-                add_suffix_in_tree(root,lyndon_word+starting_position,icfl_list[j]+starting_position);
-            }
-        }
-    }
+    suffix_tree_node* root = creazione_albero(list_of_lyndon_words,icfl_list,lenght_of_word,max_size);
     
     printf("Creazione albero, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
@@ -206,11 +94,20 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     print_array_of_vector(array_of_chains);
     */
 
+//LA FUNZIONE GET_CHAINS PERMETTE DI COMPUTARE LE GROUP_CHAINS E SALVARLE NEL NODO FIGLIO DI ROOT,
+//QUESTA IMPLEMENTAZIONE PERÒ NON FA CONTO DELLA MEMORIA USATA IN QUANTO PER OGNI NODO
+//VIENE USATO SOLO L'ARRAY DI INDICI OTTENUTO DURANTE LA CRAZIONE DELL'ALBERO
+    tStart = clock();
+    get_chains(root,word->c_str(),icfl_list);
+    printf("get_chains, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     //get_chains(root,word->c_str(),icfl_list);
 
-    tStart = clock();
-    get_chains_2(word->c_str(),icfl_list,root,root->common_chain_of_suffiexes);
-    printf("get_chains_2, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+//LA FUNZIONE GET_CHAINS_2 PERMETTE DI COMPUTARE ANCHE LE COMMON_CHAINS, SALVANDO QUINDI I RISULTATI
+//PARZIALI E FARLO DIVENTARE UN PROBLEMA DI PROGRAMMAZIONE DINAMICA.
+//QUESTO OVVIAMENTE A DISCAPITO DELLA MEMORIA USATA
+    //tStart = clock();
+    //get_chains_2(word->c_str(),icfl_list,root,root->common_chain_of_suffiexes);
+    //printf("get_chains_2, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
     /*
     for(int i=0;i<root->sons->used;i++){
@@ -229,7 +126,7 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
 
     printf("common+concat, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-    print_int_vector(SA);
+    //print_int_vector(SA);
     cout<<endl;
 
     if(check_suffix_array(word->c_str(),SA)) cout<<"Il SA è valido."<<endl;
