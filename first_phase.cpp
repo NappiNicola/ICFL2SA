@@ -55,8 +55,8 @@ suffix_tree_node* creazione_albero(char** list_of_lyndon_words,vector<int> icfl_
         for(int i=0;i<last_added_nodes->used;i++){
             //cout<<"i: "<<i<<endl;
             create_bit_vector(S,icfl_list,last_added_nodes->data[i]);
-            cout<<last_added_nodes->data[i]->suffix<<endl;
-            print_bit_vector(last_added_nodes->data[i]->bit_vec);
+            //cout<<last_added_nodes->data[i]->suffix<<endl;
+            //print_bit_vector(last_added_nodes->data[i]->bit_vec);
         }
 
         free(last_added_nodes);
