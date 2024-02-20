@@ -100,7 +100,6 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     //tStart = clock();
     //get_chains(root,word->c_str(),icfl_list);
     //printf("get_chains, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-    //get_chains(root,word->c_str(),icfl_list);
 
 //LA FUNZIONE GET_CHAINS_2 PERMETTE DI COMPUTARE ANCHE LE COMMON_CHAINS, SALVANDO QUINDI I RISULTATI
 //PARZIALI E FARLO DIVENTARE UN PROBLEMA DI PROGRAMMAZIONE DINAMICA.
@@ -119,7 +118,7 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     for(int i=0;i<root->sons->used;i++){
         get_chains_3(root->sons->data[i],root->sons->data[i]);
     }
-    printf("get_chains, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    printf("get_chains_3, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
 
    

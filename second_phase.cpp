@@ -12,7 +12,7 @@ using namespace std;
 array_of_int_vector* get_chains(suffix_tree_node* root,const char* S, vector<int> icfl_list){
 
     if(root->sons->used==0){
-        array_of_int_vector* chain = init_array_of_int_vector(strlen(S));
+        array_of_int_vector* chain = init_array_of_int_vector(0);
         get_ranks_from_leaf_to_root(root,S,chain,icfl_list);
         //print_array_of_vector(chain);
         compute_chain(chain,S,icfl_list);
