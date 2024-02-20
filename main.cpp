@@ -69,7 +69,7 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     clock_t tStart = clock();
     //cout<<"\nCREAZIONE ALBERO\n";
     //La root è la stringa vuota
-    suffix_tree_node* root = creazione_albero(list_of_lyndon_words,icfl_list,lenght_of_word,max_size);
+    suffix_tree_node* root = creazione_albero(list_of_lyndon_words,icfl_list,word->c_str(),lenght_of_word,max_size);
     
     printf("Creazione albero, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
@@ -82,9 +82,9 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     sort_sons_of_all_nodes(root);
     printf("sort_sons_of_all_nodes, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     
-    tStart = clock();
-    init_chains_of_prefixes(root,word->length());
-    printf("init_chains_of_prefixes, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    //tStart = clock();
+    //init_chains_of_prefixes(root,word->length());
+    //printf("init_chains_of_prefixes, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     
     /*
     array_of_int_vector* array_of_chains = init_array_of_int_vector(strlen(word->c_str()));
@@ -97,9 +97,9 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
 //LA FUNZIONE GET_CHAINS PERMETTE DI COMPUTARE LE GROUP_CHAINS E SALVARLE NEL NODO FIGLIO DI ROOT,
 //QUESTA IMPLEMENTAZIONE PERÒ NON FA CONTO DELLA MEMORIA USATA IN QUANTO PER OGNI NODO
 //VIENE USATO SOLO L'ARRAY DI INDICI OTTENUTO DURANTE LA CRAZIONE DELL'ALBERO
-    tStart = clock();
-    get_chains(root,word->c_str(),icfl_list);
-    printf("get_chains, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+    //tStart = clock();
+    //get_chains(root,word->c_str(),icfl_list);
+    //printf("get_chains, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
     //get_chains(root,word->c_str(),icfl_list);
 
 //LA FUNZIONE GET_CHAINS_2 PERMETTE DI COMPUTARE ANCHE LE COMMON_CHAINS, SALVANDO QUINDI I RISULTATI
@@ -114,6 +114,14 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
         print_array_of_vector(root->sons->data[i]->chains_of_suffixes);
     }
     */
+
+    tStart = clock();
+    for(int i=0;i<root->sons->used;i++){
+        get_chains_3(root->sons->data[i],root->sons->data[i]);
+    }
+    printf("get_chains, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+
    
    tStart = clock();
 
@@ -126,8 +134,7 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
 
     printf("common+concat, Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
-    //print_int_vector(SA);
-    cout<<endl;
+    print_int_vector(SA);
 
     if(check_suffix_array(word->c_str(),SA)) cout<<"Il SA è valido."<<endl;
     

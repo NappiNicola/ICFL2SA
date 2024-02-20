@@ -35,4 +35,15 @@ int_vector* merge_array_of_vector(array_of_int_vector* x);
 
 int* intdup(int* src, size_t len);
 
+typedef struct bit_vector
+{
+    bool* data;
+    size_t size;
+    size_t used;
+
+}bit_vector;
+bit_vector* init_bit_vector(size_t size);
+bool add_in_bit_vector(bit_vector* x,bool element);
+void print_bit_vector(bit_vector* x);
+
 #endif

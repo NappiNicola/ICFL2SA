@@ -69,6 +69,8 @@ void print_int_vector(int_vector* x){
         cout<<x->data[i]<<",";
     }
 
+    cout<<endl;
+
 }
 
 void print_array_of_vector(array_of_int_vector* x){
@@ -97,4 +99,34 @@ int* intdup(int* src, size_t len){
    int* p = (int*)malloc(len * sizeof(int));
    memcpy(p, src, len * sizeof(int));
    return p;
+}
+
+bit_vector* init_bit_vector(size_t size){
+    bit_vector* x= (bit_vector*)malloc(sizeof(bit_vector));
+    x->size=size;
+    x->data=(bool*)malloc(sizeof(bool)*size);
+    x->used=0;
+
+    return x;
+
+}
+
+bool add_in_bit_vector(bit_vector* x,bool element){
+        if (x->size==x->used){
+        x->size += 10;
+        x->data = (bool*)realloc(x->data,sizeof(bool)*x->size);
+    }
+    x->data[x->used++]=element;
+
+    return 1;
+}
+
+void print_bit_vector(bit_vector* x){
+
+    for(int i=0;i<x->used;i++){
+        cout<<x->data[i]<<",";
+    }
+
+    cout<<endl;
+
 }

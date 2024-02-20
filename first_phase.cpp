@@ -1,4 +1,5 @@
 #include "first_phase.h"
+#include "second_phase.h"
 
 
 char** get_lyndon_words(string* word,vector<int> icfl_list){
@@ -20,7 +21,7 @@ char** get_lyndon_words(string* word,vector<int> icfl_list){
     return list_of_lyndon_words;
 }
 
-suffix_tree_node* creazione_albero(char** list_of_lyndon_words,vector<int> icfl_list,int lenght_of_word,int max_size){
+suffix_tree_node* creazione_albero(char** list_of_lyndon_words,vector<int> icfl_list,const char* S,int lenght_of_word,int max_size){
     suffix_tree_node* root = build_suffix_tree_node(NULL,"\0");
     for(int i=0;i<max_size;i++){
         nodes_vector* last_added_nodes=init_nodes_vector(0);
@@ -50,11 +51,17 @@ suffix_tree_node* creazione_albero(char** list_of_lyndon_words,vector<int> icfl_
         }
 
         //ELABORA GLI ULTIMI NODI INSERITI
+        //cout<<last_added_nodes->used<<endl;
         for(int i=0;i<last_added_nodes->used;i++){
-            //cose
+            //cout<<"i: "<<i<<endl;
+            create_bit_vector(S,icfl_list,last_added_nodes->data[i]);
+            cout<<last_added_nodes->data[i]->suffix<<endl;
+            print_bit_vector(last_added_nodes->data[i]->bit_vec);
         }
 
         free(last_added_nodes);
     }
     return root;
 }
+
+

@@ -4,135 +4,10 @@
 #include <string.h>
 #include <vector>
 #include "second_phase.h"
+#include "merge.h"
 #include "utils.h"
 
 using namespace std;
-
-
-int get_factor(vector<int> icfl_list,int index){
-
-    if(index >= icfl_list[icfl_list.size()-1]){
-        return icfl_list.size()-1;
-    }
-
-    for(int i=0;i<icfl_list.size()-1;i++){
-        if(index >= icfl_list.at(i) && index < icfl_list.at(i+1)){
-            return index;
-        }
-    }
-
-    return -1;
-
-}
-
-int_vector* in_prefix_merge(const char* S, vector<int> icfl_list, int_vector* e, int_vector* g){
-
-    int_vector* result = init_int_vector(strlen(S));
-
-    int i=0;
-    int j=0;
-
-    //cout<<" last:"<<icfl_list[icfl_list.size()-1]<<" ";
-
-    while( i<e->used && j<g->used){
-
-        int element_of_e=e->data[i];
-        int element_of_g=g->data[j];
-
-        //A
-
-        if(element_of_e >= icfl_list[icfl_list.size()-1] && element_of_g >= icfl_list[icfl_list.size()-1]){
-            add_in_int_vector(result,element_of_e);
-            i++;
-        }
-
-        //B
-
-        else if(get_factor(icfl_list,element_of_e)==get_factor(icfl_list,element_of_g)){
-            add_in_int_vector(result,element_of_g);
-            j++;
-        }
-
-        //C
-
-        else{
-
-            //1)
-
-            if(element_of_e >= icfl_list[icfl_list.size()-1]){
-
-                add_in_int_vector(result,element_of_e);
-                i++;
-            }
-
-            //2)
-
-            else if(element_of_g >= icfl_list[icfl_list.size()-1]){
-
-                //cout<<"Secondo caso \n";
-
-                //CONTROLLO LCP
-                //LCP = Lunghezza dell suffisso del padre
-
-                if(
-                    S[element_of_g + LCP((char*)S,element_of_e,element_of_g)] 
-                    <
-                    S[element_of_e + LCP((char*)S,element_of_e,element_of_g)]){
-
-                        //cout<<element_of_e<<endl<<element_of_g<<endl;
-                        //cout<<S+element_of_e<<endl<<S+element_of_g<<endl<<LCP((char*)S,element_of_e,element_of_g)<<endl;
-                    
-                    
-                        add_in_int_vector(result,element_of_g);
-                        j++;
-                }
-
-                else{
-                    add_in_int_vector(result,element_of_e);
-                    i++;
-                }
-            }
-
-            //3)
-
-            else{
-
-                if(element_of_e > element_of_g){
-                    add_in_int_vector(result,element_of_g);
-                    j++;
-                }
-
-                else{
-
-                    if(S[element_of_g + LCP((char*)S,element_of_e,element_of_g)] < S[element_of_e + LCP((char*)S,element_of_e,element_of_g)]){
-                        add_in_int_vector(result,element_of_g);
-                        j++;
-                    }
-
-                    else{
-                        add_in_int_vector(result,element_of_e);
-                        i++;
-                    }
-
-                }
-
-            }
-        }
-
-    }
-
-    while(j<g->used){
-        add_in_int_vector(result,g->data[j]);
-        j++;
-    }
-
-    while(i<e->used){
-        add_in_int_vector(result,e->data[i]);
-        i++;
-    }
-
-    return result;
-}
 
 array_of_int_vector* get_chains(suffix_tree_node* root,const char* S, vector<int> icfl_list){
 
@@ -147,22 +22,6 @@ array_of_int_vector* get_chains(suffix_tree_node* root,const char* S, vector<int
     for(int i=0;i<root->sons->used;i++){
         get_chains(root->sons->data[i],S,icfl_list);
     }
-
-    /*
-
-    //per ogni figlio del nodo
-    for(int i=0;i<root->sons->used;i++){
-        //per ogni catena del figlio
-        array_of_int_vector* temp = get_chains(root->sons->data[i],S,icfl_list);
-        for(int j=0;j<temp->used;j++){
-            add_in_array_of_int_vector(
-                root->chains_of_suffixes,
-                in_prefix_merge(S,icfl_list,root->array_of_indexes,temp->data[j],strlen(root->suffix))
-            );
-        }
-    }
-
-    */
 
     return root->chains_of_suffixes;
 
@@ -235,5 +94,47 @@ void sort_sons_of_all_nodes(suffix_tree_node* root){
 
     for(int i=0;i<root->sons->used;i++){
         sort_sons_of_all_nodes(root->sons->data[i]);
+    }
+}
+
+int_vector* join_int_vector_with_bit_vector(int_vector* father_chain,int_vector* son_chain,bit_vector* bit_vec){
+    //i=indice array dei suffissi del nodo padre
+    //j=indice array dei suffissi del nodo figlio
+    //z=indice bit vector del nodo figlio
+    int i,j;
+    i=j=0;
+    int_vector* result=init_int_vector(0);
+    for(int z=0;z<bit_vec->used;z++){
+        if(bit_vec->data[z]){
+            add_in_int_vector(result,father_chain->data[i]);
+            i++;
+        }
+        else{
+           add_in_int_vector(result,son_chain->data[j]);
+            j++; 
+        }
+    }
+    return result;
+}
+
+int_vector* get_chain_from_bit_vector(suffix_tree_node* root){
+    if(root->father==NULL){
+        return root->array_of_indexes;
+    }
+    int_vector* father_chain = get_chain_from_bit_vector(root->father);
+    return join_int_vector_with_bit_vector(father_chain,root->array_of_indexes,root->bit_vec);
+}
+
+void create_bit_vector(const char* S,vector<int> icfl_list, suffix_tree_node* root){
+    int_vector* father_chain = get_chain_from_bit_vector(root->father);
+    root->bit_vec=in_prefix_merge_bit_vector(S,icfl_list,father_chain,root->array_of_indexes);
+}
+
+void get_chains_3(suffix_tree_node* root,suffix_tree_node* node){
+    if(node->sons->used==0){
+        add_in_array_of_int_vector(root->chains_of_suffixes,get_chain_from_bit_vector(node));
+    }
+    for(int i=0;i<node->sons->used;i++){
+        get_chains_3(root,node->sons->data[i]);
     }
 }

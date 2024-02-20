@@ -29,6 +29,9 @@ typedef struct suffix_tree_node{
     //Chain of suffixes dal figlio di root al nodo
     int_vector* common_chain_of_suffiexes;
 
+    //bit_vector del nodo
+    bit_vector* bit_vec;
+
 }suffix_tree_node;
 
 suffix_tree_node* build_suffix_tree_node(suffix_tree_node* father,const char* suffix);
