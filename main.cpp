@@ -76,6 +76,17 @@ vector<int> sorting_suffixes_via_icfl_trie(string* word) {
     //cout<<"\nALBERO OTTENUTO\n";
     //stampa_suffix_tree(root);
 
+/*
+    a
+ac aa  ab
+
+    a
+aa ab ac
+
+
+*/
+
+
     cout<<endl;
 
     tStart = clock();
