@@ -80,7 +80,7 @@ suffix_tree_node* add_suffix_in_tree(suffix_tree_node* root,const char* suffix,i
 
     // Il prefisso è contenuto in uno dei dei figli di root, ricorsivamente chiamiamo la funzione su tale figlio
 
-    return add_suffix_in_tree(root->sons->data[index_of_child_with_the_same_suffix],suffix,indice);
+    return add_suffix_in_tree(root->sons->data[index_of_child_with_the_same_suffix],suffix,indice,suffix_len);
 
 }
 
