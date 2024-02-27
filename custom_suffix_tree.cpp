@@ -26,11 +26,13 @@ bool add_in_nodes_vector(nodes_vector* x,suffix_tree_node* element){
 
 //Costruttore del nodo prefix_tree_node
 
-suffix_tree_node* build_suffix_tree_node(suffix_tree_node* father,const char* suffix){
+suffix_tree_node* build_suffix_tree_node(suffix_tree_node* father,const char* suffix,int suffix_len){
     suffix_tree_node* x= (suffix_tree_node*)malloc(sizeof(suffix_tree_node));
 
     x->father=father;
     x->suffix=suffix;
+
+    x->suffix_len=suffix_len;
 
     x->array_of_indexes = init_int_vector(0);
     x->sons=init_nodes_vector(0);
@@ -49,7 +51,7 @@ IN: Root,Prefix,Indice
 OUT: Bool (True se l'inserimento è andato a buon fine)
 */
 
-suffix_tree_node* add_suffix_in_tree(suffix_tree_node* root,const char* suffix,int indice){
+suffix_tree_node* add_suffix_in_tree(suffix_tree_node* root,const char* suffix,int indice,int suffix_len){
 
     //Controlliamo se il suffisso che vogliamo inserire è contenuto nel nodo in cui ci troviamo
 
@@ -69,7 +71,7 @@ suffix_tree_node* add_suffix_in_tree(suffix_tree_node* root,const char* suffix,i
 
     if(index_of_child_with_the_same_suffix == -1){
         //Creo un nuovo figlio del nodo root
-        suffix_tree_node* x=build_suffix_tree_node(root,suffix);
+        suffix_tree_node* x=build_suffix_tree_node(root,suffix,suffix_len);
         add_in_int_vector(x->array_of_indexes,indice);
         add_in_nodes_vector(root->sons,x);
         x->father=root;
