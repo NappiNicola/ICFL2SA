@@ -105,7 +105,7 @@ int16_t find_index_of_child_a_is_prefix_of_b(suffix_tree_node* node,const char* 
             */
            //cout<<suffix<<endl<<node->sons->data[i]->suffix<<endl;
             //cout<<LCP_with_given_strings(suffix,node->sons->data[i]->suffix)<<endl<<strlen(suffix)<<endl;
-            if(LCP_with_given_strings(suffix,node->sons->data[i]->suffix) == strlen(node->sons->data[i]->suffix)){
+            if(LCP_with_given_strings(suffix,node->sons->data[i]->suffix) == node->sons->data[i]->suffix_len){
                      //cout<<suffix<<endl<<node->sons->data[i]->suffix<<endl;
                      //cout<<LCP_with_given_strings(suffix,node->sons->data[i]->suffix)<<endl<<strlen(suffix)<<endl;
                 return i;
