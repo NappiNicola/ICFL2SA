@@ -81,7 +81,7 @@ int_vector* find_common_elements_2(suffix_tree_node* x,suffix_tree_node* y){
 
     //if(x->suffix_len==1) return get_chain_from_bit_vector(x);
     
-    return get_chain_from_bit_vector(x->father);
+    return get_chain_from_bit_vector(x);
 }
 
 int_vector* common_prefix_merge(int_vector* x,int_vector* y){
@@ -122,9 +122,9 @@ int_vector* common_prefix_merge(int_vector* x,int_vector* y){
 int_vector* common_prefix_merge_2(int_vector* x, suffix_tree_node* node1,int_vector* y, suffix_tree_node* node2){
     int_vector* res = init_int_vector(0);
 
-    //cout<<"a\n";
+    //cout<<"common elements: ";
     int_vector* common_elements = find_common_elements_2(node1,node2);
-    print_int_vector(common_elements);
+    //print_int_vector(common_elements);
     //cout<<"b\n";
 
     int i,j,z;
@@ -166,16 +166,16 @@ int_vector* get_common_prefix_merge(suffix_tree_node* root){
 }
 
 int_vector* get_common_prefix_merge_2(suffix_tree_node* root){
-    print_array_of_vector(root->chains_of_suffixes);
+    //print_array_of_vector(root->chains_of_suffixes);
     int_vector* res = get_chain_from_bit_vector(root->leaves->data[0]);
-    print_int_vector(res);
+    //print_int_vector(res);
 
     for(int i=1;i<root->chains_of_suffixes->used;i++){
         res = common_prefix_merge_2(res,root->leaves->data[0],root->chains_of_suffixes->data[i],root->leaves->data[i]);
-        cout<<"parital result:";
-        print_int_vector(res);
+        //cout<<"parital result:";
+        //print_int_vector(res);
     }
-    cout<<"result:";
-    print_int_vector(res);
+    //cout<<"result:";
+    //print_int_vector(res);
     return res;
 }
