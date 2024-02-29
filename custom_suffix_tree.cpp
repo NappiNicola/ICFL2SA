@@ -36,9 +36,12 @@ suffix_tree_node* build_suffix_tree_node(suffix_tree_node* father,const char* su
 
     x->array_of_indexes = init_int_vector(0);
     x->sons=init_nodes_vector(0);
+    x->leaves=init_nodes_vector(0);
 
     x->common_chain_of_suffiexes = init_int_vector(0);
     x->chains_of_suffixes = init_array_of_int_vector(0);
+
+    
     
     return x;
 }
@@ -57,6 +60,8 @@ suffix_tree_node* add_suffix_in_tree(suffix_tree_node* root,const char* suffix,i
 
     if(strcmp(root->suffix,suffix)==0){
         add_in_int_vector(root->array_of_indexes,indice);
+        //cout<<root->suffix<<","<<root->suffix_len<<"\n";
+        //print_int_vector(root->array_of_indexes);
         return NULL;
     }
 
@@ -75,6 +80,8 @@ suffix_tree_node* add_suffix_in_tree(suffix_tree_node* root,const char* suffix,i
         add_in_int_vector(x->array_of_indexes,indice);
         add_in_nodes_vector(root->sons,x);
         x->father=root;
+        //cout<<x->suffix<<","<<x->suffix_len<<"\n";
+        //print_int_vector(x->array_of_indexes);
         return x;
     }
 
@@ -83,6 +90,7 @@ suffix_tree_node* add_suffix_in_tree(suffix_tree_node* root,const char* suffix,i
     return add_suffix_in_tree(root->sons->data[index_of_child_with_the_same_suffix],suffix,indice,suffix_len);
 
 }
+
 
 /*
 Funzione che cerca il prefisso della stringa suffix passata in input tra i figli del nodo node passata input
@@ -106,8 +114,8 @@ int16_t find_index_of_child_a_is_prefix_of_b(suffix_tree_node* node,const char* 
            //cout<<suffix<<endl<<node->sons->data[i]->suffix<<endl;
             //cout<<LCP_with_given_strings(suffix,node->sons->data[i]->suffix)<<endl<<strlen(suffix)<<endl;
             if(LCP_with_given_strings(suffix,node->sons->data[i]->suffix) == node->sons->data[i]->suffix_len){
-                     //cout<<suffix<<endl<<node->sons->data[i]->suffix<<endl;
-                     //cout<<LCP_with_given_strings(suffix,node->sons->data[i]->suffix)<<endl<<strlen(suffix)<<endl;
+                    //cout<<suffix<<endl<<node->sons->data[i]->suffix<<endl;
+                    //cout<<LCP_with_given_strings(suffix,node->sons->data[i]->suffix)<<endl<<node->sons->data[i]->suffix_len<<endl;
                 return i;
             }
     }
@@ -119,7 +127,7 @@ void stampa_suffix_tree(suffix_tree_node* root){
     if (root->sons->size==0){
         cout<<"("<<root->suffix;
         cout<<"[";
-        for(size_t j = 0; j<root->array_of_indexes->size;j++){
+        for(size_t j = 0; j<root->array_of_indexes->used;j++){
             cout<<root->array_of_indexes->data[j]<<",";
         }
         cout<<"])";
@@ -130,7 +138,7 @@ void stampa_suffix_tree(suffix_tree_node* root){
         stampa_suffix_tree(root->sons->data[i]);
     }
     cout<<"[";
-        for(size_t j = 0; j<root->array_of_indexes->size;j++){
+        for(size_t j = 0; j<root->array_of_indexes->used;j++){
             cout<<root->array_of_indexes->data[j]<<",";
         }
     cout<<"])";

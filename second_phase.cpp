@@ -133,8 +133,12 @@ void create_bit_vector(const char* S,vector<int> icfl_list, suffix_tree_node* ro
 void get_chains_3(suffix_tree_node* root,suffix_tree_node* node){
     if(node->sons->used==0){
         add_in_array_of_int_vector(root->chains_of_suffixes,get_chain_from_bit_vector(node));
+        add_in_nodes_vector(root->leaves,node);
+        //print_int_vector(get_chain_from_bit_vector(node));
     }
     for(int i=0;i<node->sons->used;i++){
         get_chains_3(root,node->sons->data[i]);
     }
 }
+
+

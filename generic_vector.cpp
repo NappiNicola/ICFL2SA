@@ -76,7 +76,7 @@ void print_int_vector(int_vector* x){
 void print_array_of_vector(array_of_int_vector* x){
 
     for(int i=0;i<x->used;i++){
-        cout<<"[";
+        cout<<"[\n";
         print_int_vector(x->data[i]);
         cout<<"]";
     }
